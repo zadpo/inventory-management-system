@@ -48,47 +48,27 @@ const ClientActions = ({ row }: any) => {
         <SheetHeader>
           <SheetTitle>Edit User</SheetTitle>
           <SheetDescription>
-            Make changes to your user here. Click save when you're done.
+            Make changes to your user here. Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
           <form action={handleSubmit}>
             <div className="flex flex-col gap-2 mt-5">
               <div className="flex flex-col gap-5">
-                <FormInput
-                  type="text"
-                  name="name"
-                  label="Name"
-                  defaultValue={data?.name}
-                />
-                <FormInput
-                  type="email"
-                  name="email"
-                  label="Email"
-                  defaultValue={data?.email}
-                />
-                <FormInput
-                  type="password"
-                  name="password"
-                  label="Password"
-                  defaultValue={data?.password}
-                />
-                <Label
-                  htmlFor="role"
-                  className="mb-2 text-sm font-medium text-gray-700"
-                >
+                <FormInput type="text" name="name" label="Name" defaultValue={data?.name} />
+                <FormInput type="email" name="email" label="Email" defaultValue={data?.email} />
+                <FormInput type="password" name="password" label="Password" defaultValue={data?.password} />
+                <Label htmlFor="role" className="mb-2 text-sm font-medium text-gray-700">
                   Select Role
                 </Label>
                 <Select onValueChange={(val) => setIsAdmin(val)}>
                   <SelectTrigger className="w-full">
-                    <SelectValue
-                      placeholder={data?.isAdmin ? "admin" : "user"}
-                    />
+                    <SelectValue placeholder={data?.isAdmin ? "admin" : "client"} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Select a user</SelectLabel>
-                      {["admin", "user"]?.map((item: any) => (
+                      {["admin", "client"]?.map((item: any) => (
                         <SelectItem key={item} value={item}>
                           {item}
                         </SelectItem>

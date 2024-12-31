@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 
 const DashboardLayout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
-  console.log(session, "session");
   if (session && session?.user) {
     const user = await db.user.findUnique({
       where: { email: session?.user?.email! },

@@ -15,10 +15,12 @@ export type deleteBtnProps = {
 
 export type InventoryDataProps = {
   id: string;
-  name: string;
-  description: string;
-  cost: number;
-  lifeSpan: number;
+  itemName: string;
+  quantity: string;
+  costPerUnit: number;
+  supplierBrand: number;
+  reorderLevel: string;
+  expirationDate: Date | null;
   createdAt: Date;
   updatedAt: Date | null;
 }[];

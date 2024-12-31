@@ -1,4 +1,4 @@
-import { DeleteInventory } from "@/actions/user";
+import { deleteInventory } from "@/actions/user";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,7 +15,7 @@ import { toast } from "./ui/use-toast";
 
 export function InventoryDelete({ data }: any) {
   const handleDelete = async () => {
-    const response = await DeleteInventory(data?.id);
+    const response = await deleteInventory(data?.id);
     if (response?.error) {
       toast({ title: response?.error });
     }
@@ -29,9 +29,7 @@ export function InventoryDelete({ data }: any) {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>
-            Are you sure to delete this inventory
-          </AlertDialogTitle>
+          <AlertDialogTitle>Are you sure to delete this inventory</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>

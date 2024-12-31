@@ -1,4 +1,6 @@
-import React from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,23 +14,34 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import FormInput from "./FormInput";
+
 import { addUpdateInventory } from "@/actions/user";
-import { toast } from "./ui/use-toast";
 
 type Props = {
   title: string;
   data: any;
 };
+
 const InventoryData = ({ title, data }: Props) => {
-  const handleSubmit = async (formData: FormData) => {
+  const router = useRouter();
+  const [formData, setFormData] = useState(data || {});
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
     const response: any = await addUpdateInventory(formData, data);
     if (response?.error) {
       toast({ title: response?.error });
     } else {
-      toast({ title: "inventory created successfully" });
+      toast({ title: "Inventory item created successfully" });
+      router.refresh();
     }
   };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -38,39 +51,106 @@ const InventoryData = ({ title, data }: Props) => {
         <SheetHeader>
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription>
-            Make changes to your profile here. Click save when you're done.
+            Add or update inventory items here. Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
-        <div className="grid gap-4 py-4">
-          <form action={handleSubmit}>
-            <div className="flex flex-col gap-2 mt-5">
-              <div className="flex flex-col gap-5">
-                <FormInput
-                  type="text"
-                  name="name"
-                  label="Inventory Name"
-                  placeholder="Enter the name"
-                  defaultValue={data?.name}
-                />
-                <FormInput
-                  type="text"
-                  name="description"
-                  label="Enter Inventory Description"
-                  defaultValue={data?.description}
-                />
-                <FormInput
-                  type="text"
-                  name="cost"
-                  label="Enter Inventory Cost"
-                  defaultValue={data?.cost}
-                />
-              </div>
+        <form onSubmit={handleSubmit}>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="itemName" className="text-right">
+                Item Name
+              </Label>
+              <Input
+                id="itemName"
+                name="itemName"
+                placeholder="Enter the item name"
+                defaultValue={data?.itemName}
+                onChange={handleChange}
+                className="col-span-3"
+                required
+              />
             </div>
-            <Button type="submit" className="mt-5">
-              {title}
-            </Button>
-          </form>
-        </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="quantity" className="text-right">
+                Quantity
+              </Label>
+              <Input
+                id="quantity"
+                name="quantity"
+                placeholder="Enter the quantity (e.g., 10 kg)"
+                defaultValue={data?.quantity}
+                onChange={handleChange}
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="costPerUnit" className="text-right">
+                Cost per Unit
+              </Label>
+              <Input
+                id="costPerUnit"
+                name="costPerUnit"
+                type="number"
+                step="0.01"
+                placeholder="Enter the cost per unit"
+                defaultValue={data?.costPerUnit}
+                onChange={handleChange}
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="supplierBrand" className="text-right">
+                Supplier/Brand
+              </Label>
+              <Input
+                id="supplierBrand"
+                name="supplierBrand"
+                placeholder="Enter the supplier or brand"
+                defaultValue={data?.supplierBrand}
+                onChange={handleChange}
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="reorderLevel" className="text-right">
+                Reorder Level
+              </Label>
+              <Input
+                id="reorderLevel"
+                name="reorderLevel"
+                placeholder="Enter the reorder level (e.g., 5 kg)"
+                defaultValue={data?.reorderLevel}
+                onChange={handleChange}
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="expirationDate" className="text-right">
+                Expiration Date
+              </Label>
+              <Input
+                id="expirationDate"
+                name="expirationDate"
+                type="date"
+                placeholder="Enter the expiration date"
+                defaultValue={
+                  data?.expirationDate ? new Date(data.expirationDate).toISOString().split("T")[0] : ""
+                }
+                onChange={handleChange}
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <SheetFooter>
+            <SheetClose asChild>
+              <Button type="submit">Save changes</Button>
+            </SheetClose>
+          </SheetFooter>
+        </form>
       </SheetContent>
     </Sheet>
   );

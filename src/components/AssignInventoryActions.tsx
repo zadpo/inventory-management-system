@@ -9,38 +9,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { updateUser } from "@/actions/user";
-import { toast } from "./ui/use-toast";
+import { assignInventoryAccessToUser } from "@/actions/user";
+import { toast } from "@/components/ui/use-toast";
 
-const AssignInventoryActions = ({ row }: any) => {
-  const task = row.original;
-  const client = task?.clients?.find((cli: any) => cli.id == task?.userId);
-
+const AssignInventoryActions = ({ clients }: { clients: any[] }) => {
   const handleChange = async (userId: string) => {
-    const res: any = await updateUser(task?.id, userId, false);
+    const hasAccess = true;
+    const res = await assignInventoryAccessToUser(userId, hasAccess);
 
-    if (res?.error) {
-      toast({ title: res?.error });
+    if (res.error) {
+      toast({ title: res.error });
     } else {
-      toast({ title: "Inventory successfully transfered" });
+      toast({ title: "User successfully assigned as 'user' with inventory access" });
     }
   };
+
   return (
     <div className="flex gap-8">
       <Select onValueChange={handleChange}>
         <SelectTrigger className="w-full">
-          <SelectValue
-            placeholder={
-              client ? `Transfer to ${client?.name}` : "Select an client"
-            }
-          />
+          <SelectValue placeholder="Assign a user" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Select a user</SelectLabel>
-            {task?.clients?.map((item: any) => (
-              <SelectItem key={item.id} value={item.id}>
-                {item?.name}
+            {clients.map((client) => (
+              <SelectItem key={client.id} value={client.id}>
+                {client.name}
               </SelectItem>
             ))}
           </SelectGroup>
